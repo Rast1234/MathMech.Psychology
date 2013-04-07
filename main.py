@@ -11,7 +11,7 @@ import vlc
 class ControlMainWindow(QtGui.QMainWindow):
     __extList = ['avi', 'mpg', 'mpeg', 'mkv', 'wmv',
                  'flv', 'mov', 'mp4', 'ts', 'dv', ]
-    __dir = '' #'video\\'
+    __dir = '.' #'video\\'
     __player = '.\\vlc\\vlc.exe' #windows only
 
     def __init__(self, parent=None):
