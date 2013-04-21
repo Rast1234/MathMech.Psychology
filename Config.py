@@ -14,7 +14,7 @@ class Config(object):
         'files': [],  # selected files in current folder
     }
     def __init__(self):
-        self.update()
+        self.update(self.config)
 
     def load(self, filename):
         pass
