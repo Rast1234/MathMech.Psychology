@@ -18,7 +18,7 @@ class ControlMainWindow(QtGui.QMainWindow):
         self.ui.setupUi(self)
 
         self.config = Config()
-        self.player = PlayerControl(self, self.config.player)
+        self.player = PlayerControl(self)
         self.embedPlayer(self.player)
 
         for x in self.listFiles():
