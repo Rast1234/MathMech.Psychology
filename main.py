@@ -50,7 +50,7 @@ class ControlMainWindow(QtGui.QMainWindow):
         else:
             for x in files:
                 if x.split('.')[-1] in self.config.extensions:
-                    result.append(join(self.folder, x))
+                    result.append(join(self.config.folder, x))
         return result
 
     @QtCore.Slot()
