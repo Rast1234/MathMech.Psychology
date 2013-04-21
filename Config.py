@@ -13,6 +13,14 @@ class Config(object):
         'extensions': ['avi', 'mpg', 'mpeg', 'mkv', 'wmv',
                        'flv', 'mov', 'mp4', 'ts', 'dv', ],  # filetypes
         'files': [],  # selected files in current folder
+        'totaltime': 15  # in seconds
+        'rules': [  # timing rules: (time, speed)
+            (5, 3),
+            (3, 1)
+        ]
+        'default_speed': 1  # when all rules passed ant totaltime is not reached
+        'interrupts': 7  # pauses during totaltime
+        # TODO: interrupts behavior
     }
     def __init__(self):
         self.update(self.config)

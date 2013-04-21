@@ -8,6 +8,7 @@ from window import *
 from os.path import isfile, join
 from PlayerControl import PlayerControl
 from Config import Config
+import Messages
 
 
 class ControlMainWindow(QtGui.QMainWindow):
@@ -75,7 +76,7 @@ class ControlMainWindow(QtGui.QMainWindow):
             self.player.Open(one)
             self.player.Play()
         except IndexError:
-            self.fail('ОШИБКА', 'Не выбрано ни одного файла')
+            self.fail(Messages.title_fail, Messages.no_file)
 
 
 
