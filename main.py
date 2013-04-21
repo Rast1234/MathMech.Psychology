@@ -6,37 +6,37 @@ import os
 from PySide import QtCore, QtGui
 from window import *
 from os.path import isfile, join
-import vlc
+from PlayerControl import PlayerControl
+from Config import Config
+
 
 class ControlMainWindow(QtGui.QMainWindow):
-    __extList = ['avi', 'mpg', 'mpeg', 'mkv', 'wmv',
-                 'flv', 'mov', 'mp4', 'ts', 'dv', ]
-    __dir = '.' #'video\\'
-    __player = '.\\vlc\\vlc.exe' #windows only
 
     def __init__(self, parent=None):
         super(ControlMainWindow, self).__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.instance = vlc.Instance()
-        self.mediaplayer = self.instance.media_player_new()
+        self.config = Config()
+        self.player = PlayerControl(self, self.config.player)
+        self.embedPlayer(self.player)
+
+        for x in self.listFiles():
+            item = QtGui.QListWidgetItem(self.ui.fileList)
+            item.setText(x)
+            item.setFlags(item.flags() or QtCore.Qt.ItemIsUserCheckable)
+            item.setCheckState(QtCore.Qt.Checked)  # play all stuff by default
+
+        self.ui.launchButton.clicked.connect(self.on_click)
+        self.ui.launchButton.setFocus()
+
+    def embedPlayer(self, player):
         self.vframe = QtGui.QFrame()
         self.palette = self.vframe.palette()
         self.palette.setColor(QtGui.QPalette.Window, QtGui.QColor(0, 0, 0))
         self.vframe.setPalette(self.palette)
         self.vframe.setAutoFillBackground(True)
         self.ui.horizontalLayout.addWidget(self.vframe)
-
-
-        for x in self.listFiles():
-            item = QtGui.QListWidgetItem(self.ui.fileList)
-            item.setText(x)
-            item.setFlags(item.flags() or QtCore.Qt.ItemIsUserCheckable)
-            item.setCheckState(QtCore.Qt.Checked)  #play all stuff by default
-
-        self.ui.launchButton.clicked.connect(self.on_click)
-        self.ui.launchButton.setFocus()
 
     def fail(self, title, message):
         reply = QtGui.QMessageBox.critical(self, title, message)
@@ -62,7 +62,7 @@ class ControlMainWindow(QtGui.QMainWindow):
             if self.ui.fileList.item(x).checkState() == QtCore.Qt.Checked:
                 files.append(self.ui.fileList.item(x).text().encode('ascii'))
         config = {'files': files,
-                  }
+        }
         self.ComeOn(config)
 
     def closeEvent(self, event):
@@ -94,7 +94,7 @@ class ControlMainWindow(QtGui.QMainWindow):
             one = config['files'][0]
         except IndexError:
             self.fail('ОШИБКА', 'Не выбрано ни одного файла')
-        #create 'media' instance
+            #create 'media' instance
         self.media = self.instance.media_new(one)
         #put it in the player
         self.mediaplayer.set_media(self.media)
