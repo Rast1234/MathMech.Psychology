@@ -43,14 +43,14 @@ class ControlMainWindow(QtGui.QMainWindow):
         # msgBox.exec_()
 
     def listFiles(self):
-        files = [x for x in os.listdir(self.__dir) if isfile(join(self.__dir, x))]
+        files = [x for x in os.listdir(self.config.folder) if isfile(join(self.config.folder, x))]
         result = []
-        if not self.__extList:
+        if not self.config.extensions:
             result = files
         else:
             for x in files:
-                if x.split('.')[-1] in self.__extList:
-                    result.append(join(self.__dir, x))
+                if x.split('.')[-1] in self.config.extensions:
+                    result.append(join(self.folder, x))
         return result
 
     @QtCore.Slot()
@@ -61,44 +61,22 @@ class ControlMainWindow(QtGui.QMainWindow):
         for x in xrange(self.ui.fileList.count()):
             if self.ui.fileList.item(x).checkState() == QtCore.Qt.Checked:
                 files.append(self.ui.fileList.item(x).text().encode('ascii'))
-        config = {'files': files,
-        }
-        self.ComeOn(config)
+        self.config.files = files
+        self.ComeOn()
 
     def closeEvent(self, event):
         """Overrides default closeEvent"""
         #send 'quit' to VLC
         pass
 
-    def Play(self):
-        """Play video
-        """
-        if self.mediaplayer.play() == -1:
-            self.fail('Ошибка', 'Не выбрано ни одного файла.')
-            return
-        self.mediaplayer.play()
-
-    def Pause(self):
-        """Pause video
-        """
-        if self.mediaplayer.is_playing():
-            self.mediaplayer.pause()
-
-    def Stop(self):
-        """Stop video
-        """
-        self.mediaplayer.stop()
-
-    def ComeOn(self, config):
+    def ComeOn(self):
         try:
-            one = config['files'][0]
+            one = self.config.files[0]
+            self.player.Open(one)
+            self.player.Play()
         except IndexError:
             self.fail('ОШИБКА', 'Не выбрано ни одного файла')
-            #create 'media' instance
-        self.media = self.instance.media_new(one)
-        #put it in the player
-        self.mediaplayer.set_media(self.media)
-        self.Play()
+
 
 
 if __name__ == "__main__":

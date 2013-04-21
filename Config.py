@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 __author__ = 'rast'
 
 """
@@ -23,4 +24,8 @@ class Config(object):
         for x in self.config.keys():  # clear old entries
             del x
         self.config = newDic
-        self.__dict__.update(self.config)
+        self.__dict__.update(self.config)  # __dict__ is a magic
+
+    def reverseUpdate(self):
+        for x in self.config.keys():
+            self.config[x] = self.__dict__[x]
