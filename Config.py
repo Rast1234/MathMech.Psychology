@@ -9,7 +9,7 @@ Configuration handler
 class Config(object):
 
     config = {
-        'folder': '.',  # where to look for videos
+        'folder': '.\\video',  # where to look for videos
         'extensions': ['avi', 'mpg', 'mpeg', 'mkv', 'wmv',
                        'flv', 'mov', 'mp4', 'ts', 'dv', ],  # filetypes
         'files': [],  # selected files in current folder
