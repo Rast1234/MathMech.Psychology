@@ -17,8 +17,8 @@ class Config(object):
         'rules': [  # timing rules: (time, speed)
             (5, 3),
             (3, 1)
-        ]
-        'default_speed': 1  # when all rules passed ant totaltime is not reached
+        ],
+        'default_speed': 1,  # when all rules passed ant totaltime is not reached
         'interrupts': 7  # pauses during totaltime
         # TODO: interrupts behavior
     }
