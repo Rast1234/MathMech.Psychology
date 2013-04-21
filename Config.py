@@ -13,7 +13,7 @@ class Config(object):
         'extensions': ['avi', 'mpg', 'mpeg', 'mkv', 'wmv',
                        'flv', 'mov', 'mp4', 'ts', 'dv', ],  # filetypes
         'files': [],  # selected files in current folder
-        'totaltime': 15  # in seconds
+        'totaltime': 15,  # in seconds
         'rules': [  # timing rules: (time, speed)
             (5, 3),
             (3, 1)
