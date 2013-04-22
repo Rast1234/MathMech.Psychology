@@ -31,7 +31,7 @@ class PlayerControl(object):
             ctypes.pythonapi.PyCObject_AsVoidPtr.restype = ctypes.c_void_p
             ctypes.pythonapi.PyCObject_AsVoidPtr.argtypes = [ctypes.py_object]
             int_hwnd = ctypes.pythonapi.PyCObject_AsVoidPtr(pycobject_hwnd)
-            self.__mediaplayer.set_hwnd(int_hwnd)
+            #self.__mediaplayer.set_hwnd(int_hwnd)
         elif sys.platform == "darwin":  # for MacOS
             self.__mediaplayer.set_agl(pycobject_hwnd)
 
@@ -67,3 +67,6 @@ class PlayerControl(object):
 
     def Shutdown(self):
         pass
+
+    def SetSpeed(self, speed):
+        self.__mediaplayer.set_rate(speed)

@@ -93,6 +93,26 @@ class ControlMainWindow(QtGui.QMainWindow):
             self.close()
         elif key == QtCore.Qt.Key_F or key == QtCore.Qt.Key_F11:
             self.player.FullScreen()
+        elif key == QtCore.Qt.Key_Equal:
+            self.speedInc()
+        elif key == QtCore.Qt.Key_Minus:
+            self.speedDec()
+
+    def speedInc(self):
+        try:
+            self.speed += 1
+        except NameError:
+            self.speed = 1
+        finally:
+            self.player.SetSpeed(self.speed)
+
+    def speedDec(self):
+        try:
+            self.speed -= 1
+        except NameError:
+            self.speed = 1
+        finally:
+            self.player.SetSpeed(self.speed)
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
