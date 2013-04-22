@@ -44,7 +44,13 @@ class ControlMainWindow(QtGui.QMainWindow):
         # msgBox.exec_()
 
     def listFiles(self):
-        files = [x for x in os.listdir(self.config.folder) if isfile(join(self.config.folder, x))]
+        try:
+            os.listdir(self.config.folder)
+        except OSError:  # invalid dir
+            self.config.folder = self.config.default_folder
+        finally:
+            listing = os.listdir(self.config.folder)
+        files = [x for x in listing if isfile(join(self.config.folder, x))]
         result = []
         if not self.config.extensions:
             result = files

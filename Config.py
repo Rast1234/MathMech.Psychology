@@ -9,6 +9,7 @@ class Config(object):
 
     config = {
         'folder': '.\\video',  # where to look for videos
+        'default_folder': '.',  # or when it fails..
         'extensions': ['avi', 'mpg', 'mpeg', 'mkv', 'wmv',
                        'flv', 'mov', 'mp4', 'ts', 'dv', ],  # filetypes
         'files': [],  # selected files in current folder
