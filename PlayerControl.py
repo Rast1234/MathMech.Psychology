@@ -13,14 +13,15 @@ class PlayerControl(object):
     Manages VLC Instance with programmer-friendly commands
     """
     def __init__(self, qt_frame):
+        '''
+        the media player has to be 'connected' to the QFrame
+        (otherwise a video would be displayed in it's own window)
+        this is platform specific!
+        you have to give the id of the QFrame (or similar object) to
+        vlc, different platforms have different functions for this
+        '''
         self.__instance = vlc.Instance()
-        self.__mediaplayer = self.__instance.media_player_new()
-
-        # the media player has to be 'connected' to the QFrame
-        # (otherwise a video would be displayed in it's own window)
-        # this is platform specific!
-        # you have to give the id of the QFrame (or similar object) to
-        # vlc, different platforms have different functions for this
+        self.__mediaplayer = self.__instance.media_list_player_new()
 
         pycobject_hwnd = qt_frame.winId()
 
@@ -34,19 +35,16 @@ class PlayerControl(object):
         elif sys.platform == "darwin":  # for MacOS
             self.__mediaplayer.set_agl(pycobject_hwnd)
 
-    def Open(self, fileName):
-        #create 'media' instance
-        self.__media = self.__instance.media_new(fileName)
-        #put it in the player
-        self.__mediaplayer.set_media(self.__media)
-        self.Play()
+    def Open(self, fileList):
+        self.__media = self.__instance.media_list_new(fileList)  # create 'media' instance
+        self.__mediaplayer.set_media_list(self.__media)  # put it in the player
 
     def Play(self):
         """
         Play video
         """
         if self.__mediaplayer.play() == -1:
-            # self.fail('Ошибка', 'Не выбрано ни одного файла.')
+
             return
         self.__mediaplayer.play()
 

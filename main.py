@@ -22,14 +22,10 @@ class ControlMainWindow(QtGui.QMainWindow):
         self.embedPlayer()
         self.player = PlayerControl(self.ui.vframe)
 
-        for x in self.listFiles():
-            item = QtGui.QListWidgetItem(self.ui.fileList)
-            item.setText(x)
-            item.setFlags(item.flags() or QtCore.Qt.ItemIsUserCheckable)
-            item.setCheckState(QtCore.Qt.Checked)  # play all stuff by default
-
         self.ui.launchButton.clicked.connect(self.on_click)
         self.ui.launchButton.setFocus()
+
+        self.populateFiles()
 
     def embedPlayer(self):
         #self.vframe = QtGui.QFrame()
@@ -38,6 +34,13 @@ class ControlMainWindow(QtGui.QMainWindow):
         self.ui.vframe.setPalette(self.palette)
         self.ui.vframe.setAutoFillBackground(True)
         #self.ui.verticalLayout.addWidget(self.vframe)
+
+    def populateFiles(self):
+        for x in self.listFiles():
+            item = QtGui.QListWidgetItem(self.ui.fileList)
+            item.setText(x)
+            item.setFlags(item.flags() or QtCore.Qt.ItemIsUserCheckable)
+            item.setCheckState(QtCore.Qt.Checked)  # play all stuff by default
 
     def fail(self, title, message):
         reply = QtGui.QMessageBox.critical(self, title, message)
@@ -78,8 +81,7 @@ class ControlMainWindow(QtGui.QMainWindow):
 
     def ComeOn(self):
         try:
-            one = self.config.files[0]
-            self.player.Open(one)
+            self.player.Open(self.config.files)
             self.player.Play()
         except IndexError:
             self.fail(Messages.title_fail, Messages.no_file)
