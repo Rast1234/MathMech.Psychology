@@ -31,7 +31,7 @@ class Config(object):
         'totaltime': 15,
 
         # repeat until time is over
-        'repeat': True,
+        'repeat': False,
 
         # timing rules: (time, speed)
         'rules': [
@@ -47,10 +47,11 @@ class Config(object):
         'interrupts': 7,
 
         # emulate command-line arguments
-        'vlc_args': ' '.join([
+        'vlc_args': [
             '--no-audio',
-            '--config', 'vlc.conf'
-        ]),
+            #'--config', 'vlc.conf',
+            '-vvv',  # debug
+        ],
 
         # hotkeys
         'keys': {

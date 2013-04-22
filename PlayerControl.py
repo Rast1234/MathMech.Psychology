@@ -17,6 +17,20 @@ class PlayerControl(object):
     repeat = False
 
     def __init__(self, qt_frame, cmdline):
+        self.__instance = vlc.Instance(cmdline)
+        self.__mediaplayer = self.__instance.media_player_new()
+        self.__mediaplayer.video_set_mouse_input(False)  # disable mouse in player
+        self.__mediaplayer.video_set_key_input(False)  # disable keyboard
+
+        self.Bind(qt_frame)
+
+        # connect to player events
+        manager = self.__mediaplayer.event_manager()
+        manager.event_attach(vlc.EventType.MediaPlayerEndReached, self.__OnFileEnd)
+        manager.event_attach(vlc.EventType.MediaPlayerPlaying, self.__OnPlay)
+        manager.event_attach(vlc.EventType.MediaPlayerPaused, self.__OnPause)
+
+    def Bind(self, qt_frame):
         """
         the media player has to be 'connected' to the QFrame
         (otherwise a video would be displayed in it's own window)
@@ -24,11 +38,6 @@ class PlayerControl(object):
         you have to give the id of the QFrame (or similar object) to
         vlc, different platforms have different functions for this
         """
-        self.__instance = vlc.Instance()
-        self.__mediaplayer = self.__instance.media_player_new(cmdline)
-        self.__mediaplayer.video_set_mouse_input(False)  # disable mouse in player
-        self.__mediaplayer.video_set_key_input(False)  # disable keyboard
-
         pycobject_hwnd = qt_frame.winId()
 
         if sys.platform == "linux2":  # for Linux using the X Server
@@ -41,18 +50,16 @@ class PlayerControl(object):
         elif sys.platform == "darwin":  # for MacOS
             self.__mediaplayer.set_agl(pycobject_hwnd)
 
-        # bind to player events
-        manager = self.__mediaplayer.event_manager()
-        manager.event_attach(vlc.EventType.MediaPlayerEndReached, self.__OnFileEnd)
-        manager.event_attach(vlc.EventType.MediaPlayerPlaying, self.__OnPlay)
-        manager.event_attach(vlc.EventType.MediaPlayerPaused, self.__OnPause)
-
     def Open(self, file):
         print "try to open: ", file
         self.__media = self.__instance.media_new(file)  # create 'media' instance
         print "new media instance: ", self.__media
+        if self.IsPlaying():
+            print "IS_PLAYING!"
+            return
+        print "so........"
         tmp = self.__mediaplayer.set_media(self.__media)  # put it in the player
-        print "passed to player: ", tmp
+        print "passed to player: "
 
     def OpenList(self, fileList, repeat):
         self.files = fileList
@@ -98,12 +105,13 @@ class PlayerControl(object):
 
     def __OnFileEnd(self, evt):
         print self.files
+        return
         if self.files:
             file = self.files.pop(0)
             print "next file = ", file
-            self.Open(file)
-            self.Play()
-            print "opened next file"
+            #self.__media = self.__instance.media_new(file)
+            #self.__mediaplayer.set_media(self.__media)
+            #self.Play()
             if self.repeat:
                 self.files.append(file)
         else:  # last file
