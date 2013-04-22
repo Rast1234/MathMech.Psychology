@@ -49,3 +49,11 @@ shutdown
     окно не потеряется
     нет лишних окон
     придется менять и восстанавливать layout
+
+
+[PLAYLIST]
+instance - VLC
+media - FILE
+mediaplayer - FRAME
+medialist - LIST
+medialistplayer - WTF?

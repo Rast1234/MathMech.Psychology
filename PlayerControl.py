@@ -50,24 +50,20 @@ class PlayerControl(object):
         elif sys.platform == "darwin":  # for MacOS
             self.__mediaplayer.set_agl(pycobject_hwnd)
 
-    def Open(self, file):
-        print "try to open: ", file
-        self.__media = self.__instance.media_new(file)  # create 'media' instance
-        print "new media instance: ", self.__media
-        if self.IsPlaying():
-            print "IS_PLAYING!"
-            return
-        print "so........"
-        tmp = self.__mediaplayer.set_media(self.__media)  # put it in the player
-        print "passed to player: "
+    def Open(self, files, repeat):
+        self.__list = self.__instance.media_list_new(files)
+        self.__listplayer = self.__instance.media_list_player_new()
+        if repeat:
+            self.__listplayer.set_playback_mode(vlc.PlaybackMode.loop)
+        else:
+            self.__listplayer.set_playback_mode(vlc.PlaybackMode.default)
+        self.__listplayer.set_media_player(self.__mediaplayer)  # very important!
+        self.__listplayer.set_media_list(self.__list)  # grab the list
+        self.__listplayer.play_item_at_index(0)
 
-    def OpenList(self, fileList, repeat):
-        self.files = fileList
-        self.repeat = repeat
-        file = self.files.pop(0)
-        self.Open(file)
-        if self.repeat:
-            self.files.append(file)
+        #self.__media = self.__instance.media_new(file)  # create 'media' instance
+        #tmp = self.__mediaplayer.set_media(self.__media)  # put it in the player
+
 
     def Play(self):
         """
@@ -104,19 +100,7 @@ class PlayerControl(object):
             self.__mediaplayer.set_rate(speed)
 
     def __OnFileEnd(self, evt):
-        print self.files
-        return
-        if self.files:
-            file = self.files.pop(0)
-            print "next file = ", file
-            #self.__media = self.__instance.media_new(file)
-            #self.__mediaplayer.set_media(self.__media)
-            #self.Play()
-            if self.repeat:
-                self.files.append(file)
-        else:  # last file
-            print "last file"
-            pass
+        pass
 
     def __OnPlay(self, evt):
         pass

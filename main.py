@@ -98,8 +98,8 @@ class ControlMainWindow(QtGui.QMainWindow):
         Begin work
         """
         try:
-            self.player.OpenList(self.config.files, self.config.repeat)
-            self.player.Play()
+            self.player.Open(self.config.files, self.config.repeat)
+            #self.player.Play()
         except IndexError:
             self.fail(Messages.title_fail, Messages.no_file)
 

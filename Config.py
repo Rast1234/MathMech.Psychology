@@ -49,8 +49,9 @@ class Config(object):
         # emulate command-line arguments
         'vlc_args': [
             '--no-audio',
+            '--ignore-config',
             #'--config', 'vlc.conf',
-            '-vvv',  # debug
+            #'-vvv',  # debug
         ],
 
         # hotkeys
