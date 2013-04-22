@@ -33,7 +33,7 @@ class ControlMainWindow(QtGui.QMainWindow):
 
     def embedPlayer(self, player):
         #self.vframe = QtGui.QFrame()
-        self.palette = self.vframe.palette()
+        self.palette = self.ui.vframe.palette()
         self.palette.setColor(QtGui.QPalette.Window, QtGui.QColor(0, 0, 0))
         self.ui.vframe.setPalette(self.palette)
         self.ui.vframe.setAutoFillBackground(True)
