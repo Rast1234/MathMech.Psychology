@@ -12,30 +12,37 @@ import Messages
 
 
 class ControlMainWindow(QtGui.QMainWindow):
+    """
+    A main window class
+    """
 
     def __init__(self, parent=None):
         super(ControlMainWindow, self).__init__(parent)
-        self.ui = Ui_MainWindow()
+        self.ui = Ui_MainWindow()  # get layout from 'pyside-uic mainwindow.ui' command
         self.ui.setupUi(self)
 
         self.config = Config()
-        self.embedPlayer()
-        self.player = PlayerControl(self.ui.vframe)
+        self.beautifyPlyer()
+        self.player = PlayerControl(self.ui.vframe, self.config.vlc_args)
 
         self.ui.launchButton.clicked.connect(self.on_click)
         self.ui.launchButton.setFocus()
 
         self.populateFiles()
 
-    def embedPlayer(self):
-        #self.vframe = QtGui.QFrame()
+    def beautifyPlyer(self):
+        """
+        Make player's frame black
+        """
         self.palette = self.ui.vframe.palette()
         self.palette.setColor(QtGui.QPalette.Window, QtGui.QColor(0, 0, 0))
         self.ui.vframe.setPalette(self.palette)
         self.ui.vframe.setAutoFillBackground(True)
-        #self.ui.verticalLayout.addWidget(self.vframe)
 
     def populateFiles(self):
+        """
+        Fill list widget with items
+        """
         for x in self.listFiles():
             item = QtGui.QListWidgetItem(self.ui.fileList)
             item.setText(x)
@@ -43,10 +50,15 @@ class ControlMainWindow(QtGui.QMainWindow):
             item.setCheckState(QtCore.Qt.Checked)  # play all stuff by default
 
     def fail(self, title, message):
+        """
+        Display a warning MessageBox
+        """
         reply = QtGui.QMessageBox.critical(self, title, message)
-        # msgBox.exec_()
 
     def listFiles(self):
+        """
+        Get video files from directory
+        """
         try:
             os.listdir(self.config.folder)
         except OSError:  # invalid dir
@@ -63,25 +75,30 @@ class ControlMainWindow(QtGui.QMainWindow):
                     result.append(join(self.config.folder, x))
         return result
 
-    @QtCore.Slot()
     def on_click(self):
-        print('clicked')
-
+        """
+        Start Button click event handler
+        """
         files = []
         for x in xrange(self.ui.fileList.count()):
             if self.ui.fileList.item(x).checkState() == QtCore.Qt.Checked:
                 files.append(self.ui.fileList.item(x).text().encode('ascii'))
         self.config.files = files
-        self.ComeOn()
+        self.Launch()
 
     def closeEvent(self, event):
-        """Overrides default closeEvent"""
+        """
+        Overrides default closeEvent
+        """
         self.player.Shutdown()
         pass
 
-    def ComeOn(self):
+    def Launch(self):
+        """
+        Begin work
+        """
         try:
-            self.player.Open(self.config.files[0])
+            self.player.OpenList(self.config.files, self.config.repeat)
             self.player.Play()
         except IndexError:
             self.fail(Messages.title_fail, Messages.no_file)
@@ -89,30 +106,28 @@ class ControlMainWindow(QtGui.QMainWindow):
     def keyPressEvent(self, event):
         """Overrides default keypress"""
         key = event.key()
-        if key == QtCore.Qt.Key_Escape:
+        if key in self.config.keys['exit']:
             self.close()
-        elif key == QtCore.Qt.Key_F or key == QtCore.Qt.Key_F11:
-            self.player.FullScreen()
-        elif key == QtCore.Qt.Key_Equal:
+        elif key in self.config.keys['fullscreen']:
+            self.toggleFullScreen()
+        elif key in self.config.keys['speedUp']:
             self.speedInc()
-        elif key == QtCore.Qt.Key_Minus:
+        elif key in self.config.keys['speedDown']:
             self.speedDec()
 
     def speedInc(self):
-        try:
-            self.speed += 1
-        except NameError:
-            self.speed = 1
-        finally:
-            self.player.SetSpeed(self.speed)
+            self.player.SetSpeed(10)
 
     def speedDec(self):
-        try:
-            self.speed -= 1
-        except NameError:
-            self.speed = 1
-        finally:
-            self.player.SetSpeed(self.speed)
+            self.player.SetSpeed(0.5)
+
+    def toggleFullScreen(self):
+        if not self.fullscreen:
+            self.showFullScreen()
+            self.fullscreen = True
+        else:
+            self.showNormal()
+            self.fullscreen = False
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)

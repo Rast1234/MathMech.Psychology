@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 __author__ = 'rast'
 
+from PySide import QtCore
+
 
 class Config(object):
     """
@@ -8,19 +10,55 @@ class Config(object):
     """
 
     config = {
-        'folder': '.\\video',  # where to look for videos
-        'default_folder': '.',  # or when it fails..
+
+        # good thing for future
+        'version': 1,
+
+        # where to look for videos
+        'folder': '.\\video',
+
+        # or, when it fails..
+        'default_folder': './video',
+
+        # filetypes to look for
         'extensions': ['avi', 'mpg', 'mpeg', 'mkv', 'wmv',
-                       'flv', 'mov', 'mp4', 'ts', 'dv', ],  # filetypes
-        'files': [],  # selected files in current folder
-        'totaltime': 15,  # in seconds
-        'rules': [  # timing rules: (time, speed)
-            (5, 3),
-            (3, 1)
+                       'flv', 'mov', 'mp4', 'ts', 'dv', ],
+
+        # selected files in current folder
+        'files': [],
+
+        # how long to work, in seconds
+        'totaltime': 15,
+
+        # repeat until time is over
+        'repeat': True,
+
+        # timing rules: (time, speed)
+        'rules': [
+                  (5, 3),
+                  (3, 1)
         ],
-        'default_speed': 1,  # when all rules passed and totaltime is not reached
-        'interrupts': 7  # pauses during totaltime
+
+        # when all rules passed and totaltime is not reached
+        'default_speed': 1,
+
+        # pauses during totaltime
         # TODO: interrupts behavior
+        'interrupts': 7,
+
+        # emulate command-line arguments
+        'vlc_args': ' '.join([
+            '--no-audio',
+            '--config', 'vlc.conf'
+        ]),
+
+        # hotkeys
+        'keys': {
+            'fullscreen': (QtCore.Qt.Key_F, QtCore.Qt.Key_F11),
+            'exit': (QtCore.Qt.Key_Escape, ),
+            'speedUp': (QtCore.Qt.Key_Equal, ),
+            'speedDown': (QtCore.Qt.Key_Minus, ),
+        },
     }
 
     def __init__(self):
@@ -30,11 +68,19 @@ class Config(object):
         pass
 
     def update(self, newDic):
+        """
+        Make config keys available as fields:
+        some_var.config['files'] to some_var.files
+        """
         for x in self.config.keys():  # clear old entries
             del x
         self.config = newDic
         self.__dict__.update(self.config)  # __dict__ is a magic
 
     def reverseUpdate(self):
+        """
+        Update config hash with actual values
+         (they could change during work)
+        """
         for x in self.config.keys():
             self.config[x] = self.__dict__[x]
