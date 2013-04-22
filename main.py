@@ -32,12 +32,12 @@ class ControlMainWindow(QtGui.QMainWindow):
         self.ui.launchButton.setFocus()
 
     def embedPlayer(self, player):
-        self.vframe = QtGui.QFrame()
+        #self.vframe = QtGui.QFrame()
         self.palette = self.vframe.palette()
         self.palette.setColor(QtGui.QPalette.Window, QtGui.QColor(0, 0, 0))
         self.vframe.setPalette(self.palette)
         self.vframe.setAutoFillBackground(True)
-        self.ui.horizontalLayout.addWidget(self.vframe)
+        #self.ui.verticalLayout.addWidget(self.vframe)
 
     def fail(self, title, message):
         reply = QtGui.QMessageBox.critical(self, title, message)
