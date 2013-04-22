@@ -35,8 +35,8 @@ class ControlMainWindow(QtGui.QMainWindow):
         #self.vframe = QtGui.QFrame()
         self.palette = self.vframe.palette()
         self.palette.setColor(QtGui.QPalette.Window, QtGui.QColor(0, 0, 0))
-        self.vframe.setPalette(self.palette)
-        self.vframe.setAutoFillBackground(True)
+        self.ui.vframe.setPalette(self.palette)
+        self.ui.vframe.setAutoFillBackground(True)
         #self.ui.verticalLayout.addWidget(self.vframe)
 
     def fail(self, title, message):
