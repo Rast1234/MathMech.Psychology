@@ -19,8 +19,8 @@ class ControlMainWindow(QtGui.QMainWindow):
         self.ui.setupUi(self)
 
         self.config = Config()
-        self.player = PlayerControl(self)
-        self.embedPlayer(self.player)
+        self.embedPlayer()
+        self.player = PlayerControl(self.ui.vframe)
 
         for x in self.listFiles():
             item = QtGui.QListWidgetItem(self.ui.fileList)
@@ -31,7 +31,7 @@ class ControlMainWindow(QtGui.QMainWindow):
         self.ui.launchButton.clicked.connect(self.on_click)
         self.ui.launchButton.setFocus()
 
-    def embedPlayer(self, player):
+    def embedPlayer(self):
         #self.vframe = QtGui.QFrame()
         self.palette = self.ui.vframe.palette()
         self.palette.setColor(QtGui.QPalette.Window, QtGui.QColor(0, 0, 0))

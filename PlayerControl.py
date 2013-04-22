@@ -15,6 +15,7 @@ class PlayerControl(object):
     def __init__(self, qt_frame):
         self.__instance = vlc.Instance()
         self.__mediaplayer = self.__instance.media_player_new()
+
         # the media player has to be 'connected' to the QFrame
         # (otherwise a video would be displayed in it's own window)
         # this is platform specific!
