@@ -21,7 +21,7 @@ class PlayerControl(object):
         vlc, different platforms have different functions for this
         '''
         self.__instance = vlc.Instance()
-        self.__mediaplayer = self.__instance.media_list_player_new()
+        self.__mediaplayer = self.__instance.media_player_new()
 
         pycobject_hwnd = qt_frame.winId()
 
@@ -35,9 +35,9 @@ class PlayerControl(object):
         elif sys.platform == "darwin":  # for MacOS
             self.__mediaplayer.set_agl(pycobject_hwnd)
 
-    def Open(self, fileList):
-        self.__media = self.__instance.media_list_new(fileList)  # create 'media' instance
-        self.__mediaplayer.set_media_list(self.__media)  # put it in the player
+    def Open(self, file):
+        self.__media = self.__instance.media_new(file)  # create 'media' instance
+        self.__mediaplayer.set_media(self.__media)  # put it in the player
 
     def Play(self):
         """
@@ -60,3 +60,10 @@ class PlayerControl(object):
         Stop video
         """
         self.__mediaplayer.stop()
+
+    def FullScreen(self):
+        #self.__mediaplayer.set_fullscreen(1)
+        self.__mediaplayer.toggle_fullscreen()
+
+    def Shutdown(self):
+        pass

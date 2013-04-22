@@ -76,17 +76,23 @@ class ControlMainWindow(QtGui.QMainWindow):
 
     def closeEvent(self, event):
         """Overrides default closeEvent"""
-        #send 'quit' to VLC
+        self.player.Shutdown()
         pass
 
     def ComeOn(self):
         try:
-            self.player.Open(self.config.files)
+            self.player.Open(self.config.files[0])
             self.player.Play()
         except IndexError:
             self.fail(Messages.title_fail, Messages.no_file)
 
-
+    def keyPressEvent(self, evt):
+        """Overrides default keypress"""
+        key = evt.key()
+        if key == QtCore.Key_Escape:
+            self.close()
+        elif key == QtCore.Key_F or key == QtCore.Key_F11:
+            self.player.FullScreen()
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
