@@ -86,12 +86,12 @@ class ControlMainWindow(QtGui.QMainWindow):
         except IndexError:
             self.fail(Messages.title_fail, Messages.no_file)
 
-    def keyPressEvent(self, evt):
+    def keyPressEvent(self, event):
         """Overrides default keypress"""
-        key = evt.key()
-        if key == QtCore.Key_Escape:
+        key = event.key()
+        if key == QtCore.Qt.Key_Escape:
             self.close()
-        elif key == QtCore.Key_F or key == QtCore.Key_F11:
+        elif key == QtCore.Qt.Key_F or key == QtCore.Qt.Key_F11:
             self.player.FullScreen()
 
 if __name__ == "__main__":
