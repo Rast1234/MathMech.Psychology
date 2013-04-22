@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 __author__ = 'rast'
 
-"""
-Configuration handler
-"""
-
 
 class Config(object):
+    """
+    Configuration handler
+    """
 
     config = {
         'folder': '.\\video',  # where to look for videos
@@ -22,6 +21,7 @@ class Config(object):
         'interrupts': 7  # pauses during totaltime
         # TODO: interrupts behavior
     }
+
     def __init__(self):
         self.update(self.config)
 

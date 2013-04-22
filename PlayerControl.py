@@ -2,18 +2,29 @@
 __author__ = 'rast'
 
 import vlc
+import sys
 
-"""
-VLC Controller class
-
-Manages VLC Instance with programmer-friendly commands
-"""
 
 class PlayerControl(object):
+    """
+    VLC Controller class
 
-    def __init__(self, qtWindow):
+    Manages VLC Instance with programmer-friendly commands
+    """
+    def __init__(self, qt_frame):
         self.__instance = vlc.Instance()
         self.__mediaplayer = self.__instance.media_player_new()
+        # the media player has to be 'connected' to the QFrame
+        # (otherwise a video would be displayed in it's own window)
+        # this is platform specific!
+        # you have to give the id of the QFrame (or similar object) to
+        # vlc, different platforms have different functions for this
+        if sys.platform == "linux2":  # for Linux using the X Server
+            self.__mediaplayer.set_xwindow(qt_frame.winId())
+        elif sys.platform == "win32":  # for Windows
+            self.__mediaplayer.set_hwnd(qt_frame.winId())
+        elif sys.platform == "darwin":  # for MacOS
+            self.__mediaplayer.set_agl(qt_frame.windId())
 
     def Open(self, fileName):
         #create 'media' instance
@@ -43,4 +54,3 @@ class PlayerControl(object):
         Stop video
         """
         self.__mediaplayer.stop()
-

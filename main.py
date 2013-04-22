@@ -40,7 +40,7 @@ class ControlMainWindow(QtGui.QMainWindow):
         self.ui.horizontalLayout.addWidget(self.vframe)
 
     def fail(self, title, message):
-        reply = QtGui.QMessageBox.critical(self, 'Error: '+title, message)
+        reply = QtGui.QMessageBox.critical(self, title, message)
         # msgBox.exec_()
 
     def listFiles(self):
