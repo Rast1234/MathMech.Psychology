@@ -71,8 +71,8 @@ class Config(object):
 
     def update(self, newDic):
         """
-        Make config keys available as fields:
-        some_var.config['files'] to some_var.files
+        Make config keys available as class fields:
+        instance.config['files'] to instance.files
         """
         for x in self.config.keys():  # clear old entries
             del x

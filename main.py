@@ -21,12 +21,19 @@ class ControlMainWindow(QtGui.QMainWindow):
         self.ui = Ui_MainWindow()  # get layout from 'pyside-uic mainwindow.ui' command
         self.ui.setupUi(self)
 
+        self.timer = QtCore.QTimer(self)
+        self.timer.setInterval(200)
+        self.connect(self.timer, QtCore.SIGNAL("timeout()"),
+                     self.refresh)
+
         self.config = Config()
         self.beautifyPlyer()
         self.player = PlayerControl(self.ui.vframe, self.config.vlc_args)
 
         self.ui.launchButton.clicked.connect(self.on_click)
         self.ui.launchButton.setFocus()
+
+        self.fullscreen = False
 
         self.populateFiles()
 
@@ -75,6 +82,14 @@ class ControlMainWindow(QtGui.QMainWindow):
                     result.append(join(self.config.folder, x))
         return result
 
+    def refresh(self):
+        """
+        Update active UI elements: time, speed
+        """
+        if not self.player.IsPlaying():
+            self.timer.stop()
+        #self.ui.speedIndicator.text = 42
+
     def on_click(self):
         """
         Start Button click event handler
@@ -85,6 +100,7 @@ class ControlMainWindow(QtGui.QMainWindow):
                 files.append(self.ui.fileList.item(x).text().encode('ascii'))
         self.config.files = files
         self.Launch()
+
 
     def closeEvent(self, event):
         """
@@ -100,6 +116,7 @@ class ControlMainWindow(QtGui.QMainWindow):
         try:
             self.player.Open(self.config.files, self.config.repeat)
             #self.player.Play()
+            self.timer.start()
         except IndexError:
             self.fail(Messages.title_fail, Messages.no_file)
 
@@ -111,23 +128,23 @@ class ControlMainWindow(QtGui.QMainWindow):
         elif key in self.config.keys['fullscreen']:
             self.toggleFullScreen()
         elif key in self.config.keys['speedUp']:
-            self.speedInc()
+            self.player.SpeedChange(0.5)
         elif key in self.config.keys['speedDown']:
-            self.speedDec()
-
-    def speedInc(self):
-            self.player.SetSpeed(10)
-
-    def speedDec(self):
-            self.player.SetSpeed(0.5)
+            self.player.SpeedChange(-0.5)
 
     def toggleFullScreen(self):
         if not self.fullscreen:
-            self.showFullScreen()
+            self.ui.vframe.showFullScreen()
             self.fullscreen = True
         else:
-            self.showNormal()
+            self.ui.vframe.showNormal()
             self.fullscreen = False
+
+    def openFolder(self):
+        dialog = QtGui.QFileDialog()
+        dialog.setFileMode(QtGui.QFileDialog.Directory)
+        dialog.setOption(QtGui.QFileDialog.ShowDirsOnly)
+        dialog.exec_()
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)

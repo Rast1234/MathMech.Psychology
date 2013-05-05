@@ -99,6 +99,11 @@ class PlayerControl(object):
         else:
             self.__mediaplayer.set_rate(speed)
 
+    def SpeedChange(self, arg):
+        speed = self.__mediaplayer.get_rate()
+        speed += arg
+        self.SetSpeed(speed)
+
     def __OnFileEnd(self, evt):
         pass
 
