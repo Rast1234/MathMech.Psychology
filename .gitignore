@@ -1,4 +1,8 @@
 *.py[cod]
+*.swp
+~*
+window.py
+video/*
 
 # C extensions
 *.so
@@ -6,6 +10,7 @@
 # Packages
 *.egg
 *.egg-info
+
 dist
 build
 eggs

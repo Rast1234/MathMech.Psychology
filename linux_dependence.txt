@@ -1,0 +1,4 @@
+python2-pyside
+python2-pyside-tools
+libvlc-qt
+
