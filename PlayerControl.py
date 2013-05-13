@@ -17,6 +17,7 @@ class PlayerControl(object):
     repeat = False
 
     def __init__(self, qt_frame, cmdline):
+        self.__speed = 1.0
         self.__instance = vlc.Instance(cmdline)
         self.__mediaplayer = self.__instance.media_player_new()
         self.__mediaplayer.video_set_mouse_input(False)  # disable mouse in player
@@ -91,18 +92,22 @@ class PlayerControl(object):
     def IsPlaying(self):
         return self.__mediaplayer.is_playing()
 
+    def GetSpeed(self):
+        #return self.__mediaplayer.get_rate() #fails under windows
+        return self.__speed
+
     def SetSpeed(self, speed):
+        self.__speed = speed
         if self.IsPlaying():
             self.Pause()
-            self.__mediaplayer.set_rate(speed)
+            self.__mediaplayer.set_rate(self.__speed)
             self.Play()
         else:
-            self.__mediaplayer.set_rate(speed)
+            self.__mediaplayer.set_rate(self.__speed)
 
     def SpeedChange(self, arg):
-        speed = self.__mediaplayer.get_rate()
-        speed += arg
-        self.SetSpeed(speed)
+        self.__speed += arg
+        self.SetSpeed(self.__speed)
 
     def __OnFileEnd(self, evt):
         pass

@@ -23,8 +23,7 @@ class ControlMainWindow(QtGui.QMainWindow):
 
         self.timer = QtCore.QTimer(self)
         self.timer.setInterval(200)
-        self.connect(self.timer, QtCore.SIGNAL("timeout()"),
-                     self.refresh)
+        self.connect(self.timer, QtCore.SIGNAL("timeout()"), self.refresh)
 
         self.config = Config()
         self.beautifyPlyer()
@@ -88,7 +87,10 @@ class ControlMainWindow(QtGui.QMainWindow):
         """
         if not self.player.IsPlaying():
             self.timer.stop()
-        #self.ui.speedIndicator.text = 42
+            self.fail("timer","timer stopped from refresh()")
+            pass
+        self.ui.speedIndicator.display(self.player.GetSpeed())
+        self.ui.speedIndicator.raise_()
 
     def on_click(self):
         """
