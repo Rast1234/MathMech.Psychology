@@ -40,6 +40,6 @@ class SpeedDelegate(QItemDelegate):
         editor.setValue(float(value))
 
     def setModelData(self, editor, model, index):
-        data = u"{0}x".format(editor.value())
+        data = u"{0:.2f}x".format(editor.value())
         model.setData(index, data, Qt.EditRole)
 
