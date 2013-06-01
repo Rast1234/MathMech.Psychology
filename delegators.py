@@ -54,3 +54,4 @@ class SpeedDelegate(QItemDelegate):
     def setModelData(self, editor, model, index):
         data = self.__displayFormat.format(editor.value())
         model.setData(index, data, Qt.EditRole)
+
