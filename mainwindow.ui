@@ -10,75 +10,41 @@
     <height>434</height>
    </rect>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::StrongFocus</enum>
+  </property>
   <property name="windowTitle">
    <string>Тестирование</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QHBoxLayout" name="horizontalLayout" stretch="0">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
     <item>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="1">
-       <widget class="QGroupBox" name="fileGroup">
-        <property name="maximumSize">
-         <size>
-          <width>250</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="title">
-         <string>Видео</string>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <widget class="QListWidget" name="fileList">
-           <property name="styleSheet">
-            <string notr="true">QListWidget::item { 
-	padding-top: 10px;
-}</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="launchButton">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>20</width>
-             <height>50</height>
-            </size>
-           </property>
-           <property name="autoFillBackground">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string>Запуск</string>
-           </property>
-           <property name="autoDefault">
-            <bool>false</bool>
-           </property>
-           <property name="default">
-            <bool>true</bool>
-           </property>
-           <property name="flat">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QFrame" name="vframe">
+     <layout class="QHBoxLayout" name="totalLayout">
+      <item>
+       <widget class="QFrame" name="playerGroup">
         <property name="minimumSize">
          <size>
           <width>200</width>
           <height>150</height>
          </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background: black;</string>
         </property>
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
@@ -86,88 +52,127 @@
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
         </property>
-        <property name="lineWidth">
-         <number>1</number>
-        </property>
-        <widget class="QLCDNumber" name="lcdNumber">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>330</y>
-           <width>64</width>
-           <height>23</height>
-          </rect>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <property name="leftMargin">
+          <number>0</number>
          </property>
-        </widget>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QGroupBox" name="settingsGroup">
-        <property name="title">
-         <string>Настройки</string>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item>
-          <widget class="QFrame" name="rulesTableFrame">
+          <widget class="QFrame" name="vframe">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>150</height>
+            </size>
+           </property>
            <property name="frameShape">
             <enum>QFrame::StyledPanel</enum>
            </property>
            <property name="frameShadow">
             <enum>QFrame::Raised</enum>
            </property>
+           <property name="lineWidth">
+            <number>1</number>
+           </property>
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <property name="leftMargin">
-            <number>0</number>
+          <widget class="QFrame" name="frame">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>23</height>
+            </size>
            </property>
-           <property name="bottomMargin">
-            <number>0</number>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>23</height>
+            </size>
            </property>
-           <item>
-            <widget class="QPushButton" name="addRuleButton">
-             <property name="text">
-              <string>Добавить правило</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="removeRuleButton">
-             <property name="text">
-              <string>Удалить правило</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLCDNumber" name="speedIndicator">
+              <property name="digitCount">
+               <number>3</number>
+              </property>
+              <property name="segmentStyle">
+               <enum>QLCDNumber::Filled</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
          </item>
-         <item>
-          <layout class="QHBoxLayout" name="timeLayout">
-           <item>
-            <widget class="QLabel" name="timeLabel">
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>20</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>Время показа:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QTimeEdit" name="timeInput">
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>20</height>
-              </size>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="fileGroup">
+        <property name="minimumSize">
+         <size>
+          <width>250</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>250</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>Настройки внешних файлов</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
          <item>
           <widget class="QPushButton" name="openButton">
            <property name="sizePolicy">
@@ -188,6 +193,9 @@
              <height>20</height>
             </size>
            </property>
+           <property name="focusPolicy">
+            <enum>Qt::TabFocus</enum>
+           </property>
            <property name="autoFillBackground">
             <bool>false</bool>
            </property>
@@ -206,73 +214,325 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="openExe">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>30</height>
-            </size>
+          <widget class="QLabel" name="folderLabel">
+           <property name="font">
+            <font>
+             <family>Andale Mono</family>
+             <pointsize>7</pointsize>
+            </font>
            </property>
            <property name="text">
-            <string>Выбрать программу для запуска</string>
+            <string>&lt;folder&gt;</string>
            </property>
-           <property name="default">
-            <bool>false</bool>
+           <property name="textFormat">
+            <enum>Qt::PlainText</enum>
            </property>
-           <property name="flat">
-            <bool>false</bool>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+           <property name="textInteractionFlags">
+            <set>Qt::NoTextInteraction</set>
            </property>
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="interruptsLayout">
+          <widget class="QListWidget" name="fileList">
+           <property name="minimumSize">
+            <size>
+             <width>230</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QListWidget::item { 
+	padding-top: 10px;
+}</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <property name="topMargin">
+            <number>20</number>
+           </property>
            <item>
-            <widget class="QLabel" name="interruptsLabel">
+            <widget class="QPushButton" name="openExe">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>30</height>
+              </size>
+             </property>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>20</height>
+               <height>30</height>
               </size>
              </property>
+             <property name="focusPolicy">
+              <enum>Qt::TabFocus</enum>
+             </property>
              <property name="text">
-              <string>Количество пауз:</string>
+              <string>Выбрать программу для запуска</string>
+             </property>
+             <property name="default">
+              <bool>false</bool>
+             </property>
+             <property name="flat">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="interruptsInput">
+            <widget class="QLabel" name="exeLabel">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>20</height>
+              </size>
+             </property>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
                <height>20</height>
               </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>&lt;exe&gt;</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_2">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777214</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <widget class="QCheckBox" name="automaticRunCheckBox">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>0</y>
+                <width>211</width>
+                <height>41</height>
+               </rect>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::TabFocus</enum>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label">
+              <property name="geometry">
+               <rect>
+                <x>30</x>
+                <y>5</y>
+                <width>191</width>
+                <height>31</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Автоматически запускать&lt;br/&gt;после каждого этапа&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+             <zorder>automaticRunCheckBox</zorder>
+             <zorder>label</zorder>
+             <zorder>exeLabel</zorder>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="focusPolicy">
+              <enum>Qt::TabFocus</enum>
+             </property>
+             <property name="text">
+              <string>Запустить внешнюю программу</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="settingsGroup">
+        <property name="minimumSize">
+         <size>
+          <width>250</width>
+          <height>400</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>250</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>Настройки времени</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>20</number>
+           </property>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="timeLabel">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Время работы</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QTimeEdit" name="timeInput">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+               <property name="displayFormat">
+                <string>HH:mm:ss</string>
+               </property>
+               <property name="time">
+                <time>
+                 <hour>0</hour>
+                 <minute>0</minute>
+                 <second>0</second>
+                </time>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>(суммарное, не учитывая паузы)</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
              </property>
             </widget>
            </item>
           </layout>
          </item>
          <item>
-          <widget class="QCheckBox" name="repeatCheckBox">
+          <layout class="QHBoxLayout" name="rulesControlsLayout">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="addRuleButton">
+             <property name="focusPolicy">
+              <enum>Qt::TabFocus</enum>
+             </property>
+             <property name="text">
+              <string>Добавить этап</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="removeRuleButton">
+             <property name="focusPolicy">
+              <enum>Qt::TabFocus</enum>
+             </property>
+             <property name="text">
+              <string>Удалить этап</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QPushButton" name="launchButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>20</width>
+             <height>50</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
              <width>16777215</width>
-             <height>20</height>
+             <height>50</height>
             </size>
            </property>
+           <property name="focusPolicy">
+            <enum>Qt::TabFocus</enum>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
            <property name="text">
-            <string>Повторять список файлов?</string>
+            <string>Начать тестирование</string>
            </property>
-           <property name="checkable">
+           <property name="autoDefault">
+            <bool>false</bool>
+           </property>
+           <property name="default">
             <bool>true</bool>
            </property>
-           <property name="checked">
-            <bool>true</bool>
+           <property name="flat">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -289,7 +549,7 @@
      <x>0</x>
      <y>0</y>
      <width>784</width>
-     <height>20</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -297,6 +557,7 @@
      <string>Файл</string>
     </property>
     <addaction name="action_open_folder"/>
+    <addaction name="action_open"/>
     <addaction name="action_launch"/>
     <addaction name="separator"/>
     <addaction name="action_quit"/>
@@ -306,9 +567,9 @@
      <string>Настройки</string>
     </property>
     <addaction name="action_save"/>
-    <addaction name="action_open"/>
+    <addaction name="action_load"/>
     <addaction name="separator"/>
-    <addaction name="action_new"/>
+    <addaction name="action_reset"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -322,6 +583,9 @@
    <addaction name="menu_3"/>
   </widget>
   <action name="action_open_folder">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Открыть папку с видео</string>
    </property>
@@ -330,6 +594,9 @@
    </property>
   </action>
   <action name="action_launch">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Запуск!</string>
    </property>
@@ -338,6 +605,9 @@
    </property>
   </action>
   <action name="action_quit">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Выход</string>
    </property>
@@ -346,6 +616,9 @@
    </property>
   </action>
   <action name="action_save">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Сохранить</string>
    </property>
@@ -354,14 +627,20 @@
    </property>
   </action>
   <action name="action_open">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
    <property name="text">
-    <string>Открыть</string>
+    <string>Выбрать программу</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+O</string>
+    <string>Ctrl+E</string>
    </property>
   </action>
   <action name="action_show_help">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Использование</string>
    </property>
@@ -370,6 +649,9 @@
    </property>
   </action>
   <action name="action_show_info">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>О программе</string>
    </property>
@@ -377,12 +659,23 @@
     <string>Ctrl+F1</string>
    </property>
   </action>
-  <action name="action_new">
+  <action name="action_reset">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
    <property name="text">
-    <string>Создать...</string>
+    <string>Сбросить настройки</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="action_load">
+   <property name="text">
+    <string>Загрузить</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
    </property>
   </action>
  </widget>
@@ -401,6 +694,54 @@
     <hint type="destinationlabel">
      <x>299</x>
      <y>174</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>openButton</sender>
+   <signal>clicked()</signal>
+   <receiver>action_open_folder</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>657</x>
+     <y>259</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>openExe</sender>
+   <signal>clicked()</signal>
+   <receiver>action_open</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>657</x>
+     <y>290</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>launchButton</sender>
+   <signal>clicked()</signal>
+   <receiver>action_launch</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>401</x>
+     <y>397</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
     </hint>
    </hints>
   </connection>

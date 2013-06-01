@@ -5,13 +5,14 @@ __author__ = 'actics'
 from PySide.QtCore import *
 from PySide.QtGui  import *
 
+
 class QTableWidgetDragRow(QTableWidget):
-    """Special TableWiget class which means selected only one row
-    and drag him.
+    """Special TableWiget class which allows selection
+    and dragging of a single row
     """
 
     def __init__(self, parent=None):
-        """Init method which set flags
+        """Init method which sets flags
         """
         super(QTableWidgetDragRow, self).__init__(parent)
 
@@ -22,8 +23,10 @@ class QTableWidgetDragRow(QTableWidget):
         self.setDragDropOverwriteMode(False)
         self.setDragDropMode(QAbstractItemView.DragDrop)
         self.setSelectionMode(QAbstractItemView.SingleSelection)
-        self.setSelectionBehavior(QAbstractItemView.SelectRows);
+        self.setSelectionBehavior(QAbstractItemView.SelectRows)
 
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
 
     def dropEvent(self, event):
         """Drop event callback
@@ -62,4 +65,3 @@ class QTableWidgetDragRow(QTableWidget):
             self.setRangeSelected(ran, True)
 
             event.accept()
-
