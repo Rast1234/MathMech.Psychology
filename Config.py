@@ -19,10 +19,10 @@ class Config(object):
         'version': 1,
 
         # where to look for videos
-        'folder': u'./video',
+        'folder': u'.\\video',
 
         # help file  name top open
-        'help': u'./Инструкция.pdf',
+        'help': u'.\\Инструкция.pdf',
 
         # automatically run external program?
         'auto_run': False,
