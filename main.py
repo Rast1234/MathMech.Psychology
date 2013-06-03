@@ -5,10 +5,10 @@ import sys
 import os
 import signal
 from os.path import isfile, join
-from pprint import pprint
 
+import PySide
 from PySide.QtCore import *
-from PySide.QtGui  import *
+from PySide.QtGui import *
 
 from window import *
 from PlayerControl import PlayerControl
@@ -27,9 +27,10 @@ class ControlMainWindow(QMainWindow):
         self.ui.setupUi(self)
 
         # update layout during work
-        self.timer = QTimer(self)
-        self.timer.setInterval(200)
-        self.connect(self.timer, SIGNAL("timeout()"), self.refresh)
+        self.taskTimer = QTimer(self)
+        self.taskTimer.setInterval(1000)
+        self.connect(self.taskTimer, SIGNAL("timeout()"), self.refresh)
+        self.stage = 0
 
         self.config = Config()
         self.beautifyPlyer()
@@ -40,8 +41,16 @@ class ControlMainWindow(QMainWindow):
             self.ui.fileGroup,
             self.ui.settingsGroup,
             self.ui.menubar,
-            self.ui.speedIndicator
+            self.ui.frame,
         ]
+
+        self.keys = {
+            'fullscreen': (QtCore.Qt.Key_F, QtCore.Qt.Key_F11),
+            'exit': (QtCore.Qt.Key_Escape, ),
+            'pause': (QtCore.Qt.Key_Space, ),
+            'speedUp': (QtCore.Qt.Key_Equal, ),
+            'speedDown': (QtCore.Qt.Key_Minus, ),
+        }
 
         self.finalUI()
 
@@ -53,6 +62,7 @@ class ControlMainWindow(QMainWindow):
         self.ui.rulesTable = RulesTableWidget(self.ui.settingsGroup)
         self.ui.verticalLayout_2.insertWidget(1, self.ui.rulesTable)
 
+        self.ui.stopButton.clicked.connect(self.on_stop_click)
         self.ui.launchButton.clicked.connect(self.on_click)
         self.ui.launchButton.setFocus()
 
@@ -110,11 +120,11 @@ class ControlMainWindow(QMainWindow):
         """Get video files from directory
         """
         listing = [u'(пусто)']
-        try:
-            listing = os.listdir(self.config.folder)
-        except OSError:  # invalid dir
-            self.fail(Messages.title_fail, Messages.no_dir)
-            self.config.folder = self.config.default_folder
+        if self.config.folder != '':
+            try:
+                listing = os.listdir(self.config.folder)
+            except OSError:  # invalid dir
+                self.fail(Messages.title_fail, Messages.no_dir)
         #print "LISTING =", listing
         files = [x for x in listing if isfile(join(self.config.folder, x))]
         result = []
@@ -143,63 +153,110 @@ class ControlMainWindow(QMainWindow):
         for x in xrange(self.ui.fileList.count()):
             item = self.ui.fileList.item(x)
             if item.text() in selectedFiles:
-                item.setCheckState(True)
+                item.setCheckState(Qt.Checked)
             else:
-                item.setCheckState(False)
+                item.setCheckState(Qt.Unchecked)
 
     def refresh(self):
-        """Update active UI elements: speed
+        """Monster function to manage stages and update UI elements
         """
-        if not self.player.IsPlaying():
-            self.timer.stop()
-            self.fail("timer", "timer stopped from refresh()")
-        self.ui.speedIndicator.display(self.player.GetSpeed())
+        ui = self.ui
+        ui.speedIndicator.display(self.player.GetSpeed())
+        ela = self._time_to_seconds(ui.elapsedTime.time())
+        rem = self._time_to_seconds(ui.remainTime.time())
+        if rem == 0:
+            self.taskTimer.stop()
+            self.player.Stop()
+            self.guiStop()
+            self.showNormal()
+        else:
+            ela += 1
+            rem -= 1
+            ui.elapsedTime.setTime(self._seconds_to_time(ela))
+            ui.remainTime.setTime(self._seconds_to_time(rem))
+        self.stage -= 1
+        if self.stage == 0:
+            rule = ui.currentRule.value()  # actually, this is next rule
+            if rule < len(self.config.rules):
+                self.player.SetSpeed(self.config.rules[rule][1])
+                self.stage = self.config.rules[rule][0]
+                ui.currentRule.setValue(rule + 1)
+            #otherwise, total countdown is over, and everything is stopped already.
+        ui.currentStage.setValue(self.stage)
 
     def on_click(self):
         """Start Button click event handler
         """
         self.grabDataToConfig()
-        self.Launch()
+        files = []
+        for x in self.config.files:
+            files.append(join(self.config.folder, x))
+        if not files:
+            self.fail(Messages.title_fail, Messages.no_file)
+            return
+        if not self.config.rules:
+            self.fail(Messages.title_fail, Messages.no_rules)
+            return
+        sum = 0
+        for x in self.config.rules:
+            sum += x[0]
+        raw = self.ui.timeInput.time()
+        total = self._time_to_seconds(raw)
+        th = raw.hour()
+        tm = raw.minute()
+        ts = raw.second()
+        sh = sum / 3600
+        sm = sum / 60 % 60
+        ss = sum % 60
+        if sum != total:
+            details = u'''
+Заданное время: {0:d}ч : {1:d}м : {2:d}с
+Cуммарное время этапов: {3:d}ч : {4:d}м : {5:d}с'''.format(th,tm,ts, sh,sm,ss)
+            self.fail(Messages.title_fail, Messages.invalid_time + details)
+            return
+
+
+        self.player.Open(files)  # player will start playing automatically
+        # self.player.Play()
+        self.player.SetSpeed(self.config.rules[0][1])
+        self.guiPlay()
+        self.showFullScreen()
+        self.stage = self.config.rules[0][0]
+        self.ui.currentStage.setValue(self.stage)
+        self.taskTimer.start()
+
+    def on_stop_click(self):
+        """Stop button click event handler
+        """
+        self.player.Stop()
+        self.stage = 0
+        self.ui.currentStage.setValue(self.stage)
+        self.guiStop()
 
     def closeEvent(self, event):
         """Overrides default closeEvent
         """
         self.player.Shutdown()
-        pass
-
-    def Launch(self):
-        """Begin work
-        """
-        try:
-            files = []
-            for x in self.config.files:
-                files.append(join(self.config.folder, x))
-            self.player.Open(files)
-            # self.player.Play()
-            self.timer.start()
-        except IndexError:
-            self.fail(Messages.title_fail, Messages.no_file)
 
     def keyPressEvent(self, event):
         """Overrides default keypress
         """
         key = event.key()
-        if key in self.config.keys['exit']:
+        if key in self.keys['exit']:
             self.close()
-        elif key in self.config.keys['fullscreen']:
-            self.toggleFullScreen()
-        elif key in self.config.keys['pause']:
-            if self.isFullScreen():
-                self.showNormal()
-                if self.player.IsPlaying():
-                    self.player.Pause()
-            else:
-                self.showFullScreen()
-                self.player.Play()
-        elif key in self.config.keys['speedUp']:
-            self.player.SpeedChange(0.5)
-        elif key in self.config.keys['speedDown']:
-            self.player.SpeedChange(-0.5)
+        elif key in self.keys['fullscreen']:
+            if self.player.IsPlaying():
+                self.toggleFullScreen()
+        elif key in self.keys['pause']:
+            self.togglePause()
+        elif key in self.keys['speedUp']:
+            if self.player.IsPlaying():
+                self.player.SpeedChange(0.1)
+                self.ui.speedIndicator.display(self.player.GetSpeed())
+        elif key in self.keys['speedDown']:
+            if self.player.IsPlaying():
+                self.player.SpeedChange(-0.1)
+                self.ui.speedIndicator.display(self.player.GetSpeed())
 
     def toggleFullScreen(self):
         """Toggles full screen view
@@ -253,39 +310,62 @@ class ControlMainWindow(QMainWindow):
         '''Save config'''
         choice = QFileDialog.getSaveFileName(
             caption=Messages.save_dialog,
-            options=QFileDialog.HideNameFilterDetails,  # hide "(*.exe)" part
-            filter=u"Файлы настройки (*.testcfg)",
+            filter=u"Файлы настройки (*.{})".format(self.config.ext),
         )
         # PySide returns tuple (filename, filter) while QT returns only filename
         conf_file = choice[0]
         if conf_file != '':
+            if conf_file.split('.')[-1] != self.config.ext:  # filename w/o extension
+                if conf_file[-1] == '.':
+                    conf_file += self.config.ext
+                else:
+                    conf_file += '.' + self.config.ext
             self.grabDataToConfig()
-            self.config.save(conf_file)
+            try:
+                self.config.save(conf_file)
+            except:
+                self.fail(Messages.title_fail, Messages.save_fail)
 
     def load(self):
         '''Load config'''
         choice = QFileDialog.getOpenFileName(
             caption=Messages.load_dialog,
-            options=QFileDialog.HideNameFilterDetails,  # hide "(*.exe)" part
-            filter=u"Файлы настройки (*.testcfg)",
+            filter=u"Файлы настройки (*.{})".format(self.config.ext),
         )
         # PySide returns tuple (filename, filter) while QT returns only filename
         conf_file = choice[0]
         if conf_file != '':
-            self.config.load(conf_file)
-            self.updateUIFromConfig()
+            try:
+                self.config.load(conf_file)
+                self.updateUIFromConfig()
+            except:
+                self.fail(Messages.title_fail, Messages.load_fail)
 
     def showHelp(self):
         '''Open help doc'''
-        os.startfile(self.config.help)
+        try:
+            os.startfile(self.config.help)  # it works under Windows
+        except WindowsError:
+            self.fail(Messages.title_fail, Messages.help_fail + self.config.help)
 
     def showInfo(self):
         '''Show authors'''
-        QMessageBox.about(self, Messages.about, Messages.authors)
+        versions = u"""
+
+Используемые библиотеки:
+
+    * Python {}
+    * Qt {}
+    * PySide {}
+    * libvlc {}
+Собрано для Windows с помощью cxFreeze
+""".format(sys.version, QtCore.qVersion(), PySide.__version__, self.player.version)
+        QMessageBox.about(self, Messages.about, Messages.authors + versions)
 
     def reset(self):
         '''Load empty config'''
-        pass
+        self.config.reset()
+        self.updateUIFromConfig()
 
     def grabDataToConfig(self):
         """Collect all input fields into config
@@ -298,16 +378,23 @@ class ControlMainWindow(QMainWindow):
         cfg.rules = ui.rulesTable.toRulesList() #this is called only here
         cfg.files = self.listSelectedFiles()
 
-        raw_time = ui.timeInput.time()
-
-        cfg.totaltime = raw_time.hour() * 60 * 60 + \
-                                raw_time.minute() * 60 + \
-                                raw_time.second()
+        cfg.totaltime = self._time_to_seconds(ui.timeInput.time())
 
         status = ui.automaticRunCheckBox.isChecked()
         cfg.auto_run = status
         cfg.files = self.listSelectedFiles()
         cfg.reverseUpdate()
+
+    def _time_to_seconds(self, raw_time):
+        return raw_time.hour() * 60 * 60 + \
+                        raw_time.minute() * 60 + \
+                        raw_time.second()
+
+    def _seconds_to_time(selfself, sec):
+        h = sec / 3600
+        m = sec / 60 % 60
+        s = sec % 60
+        return QTime(h, m, s)
 
     def updateUIFromConfig(self):
         """Update file list, labels etc. from config
@@ -334,6 +421,35 @@ class ControlMainWindow(QMainWindow):
         self.populateFiles()
         cfg.reverseUpdate()
 
+    def guiPlay(self):
+        """Initialize playback mode
+        """
+        ui = self.ui
+        ui.stopButton.setEnabled(True)
+        ui.launchButton.setEnabled(False)
+        ui.remainTime.setTime(ui.timeInput.time())
+        ui.elapsedTime.setTime(QTime(0, 0, 0))
+        ui.currentRule.setValue(1)  # will always start from first rule
+
+    def guiStop(self):
+        """Initialize default (stopped) mode
+        """
+        ui = self.ui
+        ui.stopButton.setEnabled(False)
+        ui.launchButton.setEnabled(True)
+        ui.remainTime.setTime(ui.timeInput.time())
+        ui.elapsedTime.setTime(QTime(0, 0, 0))
+        ui.currentRule.setValue(1)  # will always start from first rule
+
+    def togglePause(self):
+        if self.player.IsPlaying():
+            self.player.Pause()
+            self.taskTimer.stop()
+            self.showNormal()
+        else:
+            self.showFullScreen()
+            self.player.Play()
+            self.taskTimer.start()
 
 def main():
     """Program enter

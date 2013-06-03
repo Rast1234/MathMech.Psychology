@@ -35,6 +35,7 @@ class PlayerControl(object):
         self.__listplayer = self.__instance.media_list_player_new()
 
         self.Bind(qt_frame)
+        self.version = vlc.libvlc_get_version()
 
     def Bind(self, qt_frame):
         """
@@ -86,6 +87,13 @@ class PlayerControl(object):
         player.pause()
         #player = self.__mediaplayer
         #player.set_pause(1)
+
+    def Stop(self):
+        """
+        Stop playback
+        """
+        player = self.__listplayer
+        player.stop()
 
     def Stop(self):
         """

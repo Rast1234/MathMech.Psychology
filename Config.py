@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'rast'
 
-from PySide import QtCore
-
+import pickle
 
 class Config(object):
     """
@@ -18,11 +17,14 @@ class Config(object):
         # good thing for future
         'version': 1,
 
+        # config file extension
+        'ext': 'testcfg',
+
         # where to look for videos
-        'folder': u'.\\video',
+        'folder': u'',
 
         # help file  name top open
-        'help': u'.\\Инструкция.pdf',
+        'help': u'./Инструкция.pdf',
 
         # automatically run external program?
         'auto_run': False,
@@ -39,7 +41,7 @@ class Config(object):
 
         # timing rules: (time, speed)
         'rules': [
-                  (0, 0),
+                  (0, 1),
         ],
 
         # total run time in seconds
@@ -74,24 +76,32 @@ class Config(object):
             #'-vvv',  # debug
         ],
 
-        # hotkeys
-        'keys': {
-            'fullscreen': (QtCore.Qt.Key_F, QtCore.Qt.Key_F11),
-            'exit': (QtCore.Qt.Key_Escape, ),
-            'pause': (QtCore.Qt.Key_Space, ),
-            'speedUp': (QtCore.Qt.Key_Equal, ),
-            'speedDown': (QtCore.Qt.Key_Minus, ),
-        },
     }
 
     def __init__(self):
         self.update(self.config)
 
+    def reset(self):
+        self.rules = []
+        self.totaltime = 0
+        self.auto_run = False
+        self.reverseUpdate()
+
     def load(self, filename):
-        pass
+        try:
+            with open(filename, "rb") as out:
+                newConfig = pickle.load(out)
+                self.update(newConfig)
+        except:
+            raise
 
     def save(self, filename):
-        pass
+        self.reverseUpdate()
+        try:
+            with open(filename, "wb") as out:
+                pickle.dump(self.config, out, pickle.HIGHEST_PROTOCOL)
+        except Exception as e:
+            print e
 
     def update(self, newDic):
         """

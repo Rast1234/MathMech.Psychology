@@ -22,7 +22,7 @@ class RulesTableWidget(QTableWidgetDragRow):
         self.setItemDelegateForColumn(0, TimeDelegate(self))
         self.setItemDelegateForColumn(1, SpeedDelegate(self))
 
-        self.setHorizontalHeaderLabels((u"Время этапа", u"Скорость видео"))
+        self.setHorizontalHeaderLabels((u"Время этапа", u"Скорость"))
         self.horizontalHeader().setResizeMode(QHeaderView.Stretch)
 
     def addRule(self, time, speed):
@@ -77,10 +77,7 @@ class RulesTableWidget(QTableWidgetDragRow):
         #self.setHorizontalHeaderLabels((u"Время", u"Скорость"))
 
         for time, speed in rules_list:
-            if time == 0:
-                continue
-
-            time = "{0:02d}:{0:02d}:{1:02d}".format(time / 3600, time / 60, time % 60)
+            time = "{0:02d}:{1:02d}:{2:02d}".format(time / 3600, time / 60 % 60, time % 60)
             speed = "{0:0.01f}x".format(speed)
 
             self.addRule(time, speed)
