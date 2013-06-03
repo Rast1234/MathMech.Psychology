@@ -78,6 +78,7 @@ class ControlMainWindow(QMainWindow):
         self.ui.action_open_folder.triggered.connect(self.openFolder)
         self.ui.action_open.triggered.connect(self.openExe)
         self.ui.action_save.triggered.connect(self.save)
+        self.ui.action_launch.triggered.connect(self.on_click)
         self.ui.action_load.triggered.connect(self.load)
         self.ui.action_show_help.triggered.connect(self.showHelp)
         self.ui.action_show_info.triggered.connect(self.showInfo)
