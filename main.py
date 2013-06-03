@@ -62,11 +62,13 @@ class ControlMainWindow(QMainWindow):
         self.ui.rulesTable = RulesTableWidget(self.ui.settingsGroup)
         self.ui.verticalLayout_2.insertWidget(1, self.ui.rulesTable)
 
+        self.ui.exeButton.clicked.connect(self.on_exe)
         self.ui.stopButton.clicked.connect(self.on_stop_click)
         self.ui.launchButton.clicked.connect(self.on_click)
         self.ui.launchButton.setFocus()
 
         self.ui.fileList.itemClicked.connect(self.on_item_click)
+        self.ui.automaticRunCheckBox.clicked.connect(self.on_auto_click)
 
         add_rule_callback = lambda: self.ui.rulesTable.addRule("00:00:00", "1.0x")
         remove_rule_callback = lambda: self.ui.rulesTable.removeRule()
@@ -92,6 +94,10 @@ class ControlMainWindow(QMainWindow):
         else:
             state = Qt.Checked
         item.setCheckState(state)
+
+    def on_auto_click(self):
+        status = self.ui.automaticRunCheckBox.isChecked()
+        self.config.auto_run = status
 
     def beautifyPlyer(self):
         """Make player's frame black
@@ -181,6 +187,12 @@ class ControlMainWindow(QMainWindow):
                 self.player.SetSpeed(self.config.rules[rule][1])
                 self.stage = self.config.rules[rule][0]
                 ui.currentRule.setValue(rule + 1)
+                if self.config.auto_run:
+                    #self.togglePause(True) - won't work from another thread
+                    evt = QKeyEvent(QEvent.KeyPress, Qt.Key_Space, Qt.KeyboardModifiers())
+                    QCoreApplication.postEvent(self, evt)
+                    self.on_exe()
+
             #otherwise, total countdown is over, and everything is stopped already.
         ui.currentStage.setValue(self.stage)
 
@@ -232,6 +244,14 @@ Cуммарное время этапов: {3:d}ч : {4:d}м : {5:d}с'''.format
         self.stage = 0
         self.ui.currentStage.setValue(self.stage)
         self.guiStop()
+
+    def on_exe(self):
+        """Open external program
+        """
+        try:
+            os.startfile(self.config.exe)  # it works under Windows
+        except WindowsError:
+            self.fail(Messages.title_fail, Messages.exe_fail + self.config.exe)
 
     def closeEvent(self, event):
         """Overrides default closeEvent
@@ -441,8 +461,8 @@ Cуммарное время этапов: {3:d}ч : {4:d}м : {5:d}с'''.format
         ui.elapsedTime.setTime(QTime(0, 0, 0))
         ui.currentRule.setValue(1)  # will always start from first rule
 
-    def togglePause(self):
-        if self.player.IsPlaying():
+    def togglePause(self, pause=False):
+        if self.player.IsPlaying() or pause:
             self.player.Pause()
             self.taskTimer.stop()
             self.showNormal()

@@ -83,10 +83,10 @@ class PlayerControl(object):
         """
         Pause video
         """
-        player = self.__listplayer
-        player.pause()
-        #player = self.__mediaplayer
-        #player.set_pause(1)
+        #player = self.__listplayer
+        #player.pause()
+        player = self.__mediaplayer
+        player.set_pause(1)
 
     def Stop(self):
         """
