@@ -64,7 +64,6 @@ class ControlMainWindow(QMainWindow):
 
         self.ui.exeButton.clicked.connect(self.on_exe)
         self.ui.stopButton.clicked.connect(self.on_stop_click)
-        self.ui.launchButton.clicked.connect(self.on_click)
         self.ui.launchButton.setFocus()
 
         self.ui.fileList.itemClicked.connect(self.on_item_click)
